@@ -1,6 +1,6 @@
 # ollama-vision-mcp
 
-[English](README.md) · [中文](README.zh-CN.md)
+[English](README.md) · 中文
 
 为使用纯文本模型的 VS Code Copilot（例如 DeepSeek）提供**本地视觉能力**的极简桥接服务。
 

@@ -1,12 +1,10 @@
 # ollama-vision-mcp
 
-[English](https://readme.md/) · [中文](https://readme.zh-cn.md/)
+English · [中文](README.zh-CN.md)
 
 A minimal bridging service that provides **local vision capabilities** for VS Code Copilot using text-only models (e.g., DeepSeek).
 
 When Copilot uses a text-only model, it cannot directly "see" images. This MCP server fills that gap: you drop a screenshot into a folder; Copilot reads the image via this bridge → sends it to a **local Ollama vision model** → gets back a **text description**, which the text-only model can understand.
-
-text
 
 ```
 VS Code Copilot Chat (Agent mode, text-only model)
