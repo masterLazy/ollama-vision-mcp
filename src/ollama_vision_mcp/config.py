@@ -11,7 +11,7 @@ from dataclasses import dataclass
 
 DEFAULT_BASE_URL = "http://localhost:11434/v1"
 DEFAULT_MODEL = "qwen2.5vl:7b"
-DEFAULT_INBOX = ".agents/inbox"
+DEFAULT_INBOX = ".ai/inbox"
 DEFAULT_MAX_TOKENS = 2048
 
 

@@ -71,7 +71,7 @@ def main() -> int:
     print("vision_status ->", " ".join(vs_text.split())[:160])
 
     # 4) describe_image on the first inbox image (if any)
-    inbox = os.path.abspath(os.path.join(os.getcwd(), ".agents", "inbox"))
+    inbox = os.path.abspath(os.path.join(os.getcwd(), ".ai", "inbox"))
     images = [
         os.path.join(inbox, f)
         for f in (os.listdir(inbox) if os.path.isdir(inbox) else [])
@@ -99,7 +99,7 @@ def main() -> int:
         li_text = li["result"]["content"][0]["text"]
         print("list_images    ->", " ".join(li_text.split())[:120])
     else:
-        print("describe_image -> skipped (no image in .agents/inbox)")
+        print("describe_image -> skipped (no image in .ai/inbox)")
 
     # 5) negative case: missing file
     neg = request("tools/call", {

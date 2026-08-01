@@ -23,6 +23,7 @@ dependencies = [
 
 [project.scripts]
 ollama-vision-mcp = "ollama_vision_mcp.server:run"
+ollama-vision-setup = "ollama_vision_mcp.setup_mcp:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ollama_vision_mcp"]
