@@ -1,0 +1,14 @@
+{
+  "servers": {
+    "ollama-vision": {
+      "type": "stdio",
+      "command": "D:/working/ollama-vision-mcp/.venv/Scripts/python.exe",
+      "args": ["-m", "ollama_vision_mcp"],
+      "env": {
+        "VISION_MCP_BASE_URL": "http://localhost:11434/v1",
+        "VISION_MCP_MODEL": "qwen2.5vl:7b",
+        "VISION_MCP_INBOX": ".agents/inbox"
+      }
+    }
+  }
+}

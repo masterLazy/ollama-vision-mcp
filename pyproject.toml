@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ollama-vision-mcp"
+version = "0.1.0"
+description = "Minimal local vision bridge for text-only VS Code Copilot — read local images and describe them via local Ollama vision models."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+keywords = ["mcp", "vision", "ollama", "copilot", "vscode", "ocr"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "mcp>=2.0.0",
+    "httpx>=0.27.0",
+    "pillow>=10.0.0",
+]
+
+[project.scripts]
+ollama-vision-mcp = "ollama_vision_mcp.server:run"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ollama_vision_mcp"]
