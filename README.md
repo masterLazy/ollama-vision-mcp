@@ -131,6 +131,7 @@ If `ok` is false, start Ollama (`ollama serve`) first and try again.
 | `VISION_MCP_INBOX`      | `.ai/inbox`                    | Default directory for `list_images`                 |
 | `VISION_MCP_MAX_TOKENS` | `2048`                         | Maximum output tokens for the vision model          |
 | `VISION_MCP_COMPRESS`   | `1`                            | If image > 50KB, automatically resize to 768px JPEG |
+| `VISION_MCP_THINK`      | `0`                            | Keep thinking enabled for thinking models (`1`), or disable it via `reasoning_effort=none` (`0`, default) |
 
 Compatibility aliases: `VISION_MODEL`, `VISION_BASE_URL`, `VISION_INBOX`, `VISION_API_KEY`.
 

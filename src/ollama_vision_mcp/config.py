@@ -13,6 +13,9 @@ DEFAULT_BASE_URL = "http://localhost:11434/v1"
 DEFAULT_MODEL = "qwen2.5vl:7b"
 DEFAULT_INBOX = ".ai/inbox"
 DEFAULT_MAX_TOKENS = 2048
+# Thinking models (e.g. qwen3.5) burn output tokens on a `reasoning` trace and
+# frequently return empty `content`; disable thinking by default.
+DEFAULT_THINK = False
 
 
 @dataclass(frozen=True)
@@ -23,6 +26,7 @@ class Config:
     inbox_dir: str
     max_tokens: int
     compress: bool
+    think: bool
 
 
 def _first(*keys: str, default: str) -> str:
@@ -61,6 +65,9 @@ def load_config() -> Config:
 
     compress = os.environ.get("VISION_MCP_COMPRESS", "1") != "0"
 
+    think_raw = os.environ.get("VISION_MCP_THINK", "0").strip().lower()
+    think = think_raw not in ("", "0", "false", "no", "off")
+
     return Config(
         base_url=base_url,
         api_key=api_key,
@@ -68,4 +75,5 @@ def load_config() -> Config:
         inbox_dir=inbox_dir,
         max_tokens=max_tokens,
         compress=compress,
+        think=think,
     )

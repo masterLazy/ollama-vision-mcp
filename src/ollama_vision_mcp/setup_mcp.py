@@ -43,6 +43,7 @@ DEFAULTS = {
     "inbox": ".ai/inbox",
     "max_tokens": 2048,
     "compress": True,
+    "think": False,
     "api_key": "",
 }
 
@@ -286,6 +287,7 @@ def build_env(
     max_tokens: int,
     compress: bool,
     api_key: str,
+    think: bool,
 ) -> dict[str, str]:
     env = {
         "VISION_MCP_BASE_URL": base_url.rstrip("/"),
@@ -293,6 +295,7 @@ def build_env(
         "VISION_MCP_INBOX": inbox,
         "VISION_MCP_MAX_TOKENS": str(max_tokens),
         "VISION_MCP_COMPRESS": "1" if compress else "0",
+        "VISION_MCP_THINK": "1" if think else "0",
     }
     if api_key:
         env["VISION_MCP_API_KEY"] = api_key
@@ -549,7 +552,12 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
                       help="Print the config JSON without writing")
     p.add_argument("--user-mcp", help="Override the user-global mcp.json path")
     p.add_argument("--yes", "-y", action="store_true", help="Accept detected defaults (non-interactive)")
-    p.set_defaults(compress=None)
+    grp3 = p.add_mutually_exclusive_group()
+    grp3.add_argument("--think", dest="think", action="store_true",
+                      help="Keep thinking/reasoning enabled (for thinking models)")
+    grp3.add_argument("--no-think", dest="think", action="store_false",
+                      help="Disable thinking via reasoning_effort=none (default)")
+    p.set_defaults(compress=None, think=None)
     return p.parse_args(argv)
 
 
@@ -590,6 +598,9 @@ def _run(argv: list[str] | None) -> int:
         compress = args.compress
         if compress is None:
             compress = _confirm("Auto-compress large images (>50KB) to 768px JPEG?", True)
+        think = args.think
+        if think is None:
+            think = not _confirm("Disable thinking for thinking models (faster, avoids empty replies)?", True)
         api_key = args.api_key if args.api_key is not None else _ask("API key (empty = 'ollama')", "")
     else:
         python = _ensure_environment(
@@ -601,9 +612,10 @@ def _run(argv: list[str] | None) -> int:
         inbox = args.inbox or DEFAULTS["inbox"]
         max_tokens = args.max_tokens or DEFAULTS["max_tokens"]
         compress = DEFAULTS["compress"] if args.compress is None else args.compress
+        think = DEFAULTS["think"] if args.think is None else args.think
         api_key = args.api_key or ""
 
-    env = build_env(base_url, model, inbox, max_tokens, compress, api_key)
+    env = build_env(base_url, model, inbox, max_tokens, compress, api_key, think)
     entry = build_server_entry(python, env)
     server_name = args.server_name or SERVER_NAME_DEFAULT
 

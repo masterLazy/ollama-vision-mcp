@@ -25,6 +25,8 @@ def main() -> int:
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
+        encoding="utf-8",
+        errors="replace",  # server output is UTF-8; don't crash on odd bytes
         bufsize=1,
         cwd=os.getcwd(),
     )

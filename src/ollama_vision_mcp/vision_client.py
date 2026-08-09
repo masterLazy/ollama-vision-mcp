@@ -24,11 +24,13 @@ class VisionClient:
         api_key: str = "",
         model: str = "qwen2.5vl:7b",
         max_tokens: int = 2048,
+        think: bool = False,
     ) -> None:
         self.base_url = base_url.rstrip("/")
         self.api_key = api_key or "ollama"  # Ollama ignores the key but expects the field
         self.model = model
         self.max_tokens = max_tokens
+        self.think = think
         self._client = httpx.AsyncClient(timeout=DEFAULT_TIMEOUT)
 
     async def aclose(self) -> None:
@@ -63,7 +65,7 @@ class VisionClient:
 
     async def chat(self, data_url: str, prompt: str, temperature: float = 0.2) -> str:
         """Send one image (as a data URL) plus a text prompt to the vision model."""
-        body = {
+        body: dict[str, Any] = {
             "model": self.model,
             "temperature": temperature,
             "max_tokens": self.max_tokens,
@@ -77,6 +79,11 @@ class VisionClient:
                 }
             ],
         }
+        if not self.think:
+            # Thinking models (e.g. qwen3.5) otherwise burn max_tokens on the
+            # `reasoning` trace and frequently return empty `content`. This is
+            # the documented Ollama way to disable thinking on /v1.
+            body["reasoning_effort"] = "none"
 
         try:
             resp = await self._client.post(

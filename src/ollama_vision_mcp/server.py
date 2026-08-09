@@ -30,7 +30,7 @@ SERVER_VERSION = "0.1.0"
 # English prompts per analysis mode (tailored for small local models).
 PROMPTS = {
     "general": (
-        "Describe this image in full detail for a coding agent. Include ALL "
+        "Describe this image in full detail for a text-only agent. Include ALL "
         "visible text verbatim, UI elements, errors, diagrams, colors and "
         "layout. Use Markdown. Be factual."
     ),
@@ -144,6 +144,7 @@ def create_server(config: Config, client: VisionClient) -> MCPServer:
             "inbox_dir": config.inbox_dir,
             "max_tokens": config.max_tokens,
             "compress": config.compress,
+            "think": config.think,
             "ollama": health,
         }
         return json.dumps(status, ensure_ascii=False, indent=2)
@@ -159,12 +160,31 @@ def run() -> None:
         api_key=config.api_key,
         model=config.model,
         max_tokens=config.max_tokens,
+        think=config.think,
     )
     server = create_server(config, client)
 
     # Best-effort startup hint (stdout is reserved for the MCP protocol).
+    # IMPORTANT: probe with a SEPARATE throwaway client, not the shared one.
+    # asyncio.run() creates a fresh event loop and closes it afterwards; if the
+    # shared client were used here, its httpx.AsyncClient would bind to that
+    # closed loop and every later tool call would fail with
+    # "Event loop is closed" (cold-start bug).
+    async def _probe() -> dict:
+        probe = VisionClient(
+            base_url=config.base_url,
+            api_key=config.api_key,
+            model=config.model,
+            max_tokens=config.max_tokens,
+            think=config.think,
+        )
+        try:
+            return await probe.health()
+        finally:
+            await probe.aclose()
+
     try:
-        health = asyncio.run(client.health())
+        health = asyncio.run(_probe())
         if not health["ok"]:
             print(
                 f"[{SERVER_NAME}] Warning: cannot reach {config.base_url} "

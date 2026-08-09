@@ -103,6 +103,7 @@ Run vision_status
 | `VISION_MCP_INBOX`      | `.ai/inbox`                 | `list_images` 的默认目录            |
 | `VISION_MCP_MAX_TOKENS` | `2048`                      | 视觉模型的最大输出 token 数         |
 | `VISION_MCP_COMPRESS`   | `1`                         | 图片 > 50KB 时自动缩放到 768px JPEG |
+| `VISION_MCP_THINK`      | `0`                         | 是否保留思考模型的推理（`1` 开启；`0` 关闭，发送 `reasoning_effort=none`） |
 
 兼容别名：`VISION_MODEL`、`VISION_BASE_URL`、`VISION_INBOX`、`VISION_API_KEY`。
 
