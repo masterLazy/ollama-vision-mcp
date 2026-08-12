@@ -1,6 +1,6 @@
 # ollama-vision-mcp
 
-English · [中文](README.zh-CN.md)
+English · [中文](README_zh.md)
 
 A minimal bridging service that provides **local vision capabilities** for VS Code Copilot using text-only models (e.g., DeepSeek).
 
